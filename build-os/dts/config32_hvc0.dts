@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: GPL-2.0
+// 控制台走 SBI(hvc0)—— 稳定、完整可交互。UART 仍是真 RTL,但内核经 SBI 固件用它。
+/dts-v1/;
+
+/ {
+  #address-cells = <1>;
+  #size-cells = <1>;
+
+  chosen {
+      bootargs = "console=hvc0,1000000 earlycon=sbi";
+  };
+
+  cpus {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    timebase-frequency = <50000000>;
+    CPU0: cpu@0 {
+      device_type = "cpu";
+      reg = <0>;
+      status = "okay";
+      compatible = "riscv";
+      riscv,isa = "rv32ima";
+      mmu-type = "riscv,sv32";
+      clock-frequency = <50000000>;
+    };
+  };
+
+  // 内核 RAM = 32MB。虚拟磁盘在 0x82000000(RAM 之外,像外设),
+  // tb 的 36MB 内存背书,用户态 vdiskcat 经 /dev/mem mmap 读取(read 读不到 RAM 外,mmap 可以)。
+  memory@80000000 {
+      device_type = "memory";
+      reg = <0x80000000 0x2000000>;
+  };
+};

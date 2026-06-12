@@ -1,0 +1,50 @@
+# ============ QRISC-V996 .gitignore ============
+# 原则:源码 / 配置 / 脚本 / 文档 / 预编译镜像(image/*.elf)入库;
+#       一切可现场生成的构建产物、波形、日志、中间 hex 不入库。
+
+# ---- 仿真器构建产物(tb_soc:verilator/iverilog 现场生成)----
+tb/tb_soc/build/
+tb/tb_soc/build_vl/
+tb/tb_soc/build_vl_trace_*/
+
+# ---- 波形(可达 GB 级,绝不入库)----
+*.fst
+*.fst.hier
+*.vcd
+
+# ---- 仿真镜像 hex(由 make_hex.py / mkdisk.sh 现场生成)----
+tb/tb_soc/*.hex
+sdk/baremetal/build/
+sdk/linux/build/
+
+# ---- 运行期临时 / 日志 ----
+tb/tb_soc/*.log
+tb/tb_soc/boot_*.log
+tb/tb_soc/live_soc.txt
+tb/tb_soc/.gui_input.txt
+tb/tb_soc/smoke*
+tb/tb_soc/final*
+*.log
+
+# ---- SBI 引导器(bootloader/)的构建产物;只入库源码 ----
+bootloader/obj/
+bootloader/*.elf
+bootloader/*.bin
+bootloader/*.dtb
+
+# ---- 镜像:保留 hvc0 / ttyul0 / 默认;忽略 diag 调试变体(可重建)----
+image/biriscv-linux-5.4-diag.elf
+
+# ---- 通用编译产物 ----
+*.o
+*.a
+*.so
+
+# ---- Python ----
+__pycache__/
+*.pyc
+
+# ---- 编辑器 / 系统 ----
+*.swp
+*~
+.DS_Store

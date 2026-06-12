@@ -1,0 +1,60 @@
+// SPDX-License-Identifier: GPL-2.0
+// 控制台走内核自带的 uartlite 驱动(ttyUL0),不经 SBI。中断经 irq_ctrl(Xilinx INTC)。
+// 【WIP】:intc/uartlite 驱动 probe + console[ttyUL0] polled 输出已验证工作;
+// 中断驱动的交互式 shell 仍在调试(init 接管中断 TTY 后会卡在 free_initmem 前)。
+/dts-v1/;
+
+/ {
+  #address-cells = <1>;
+  #size-cells = <1>;
+
+  chosen {
+      bootargs = "console=ttyUL0 earlycon=sbi";
+      stdout-path = &uart0;
+  };
+
+  cpus {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    timebase-frequency = <50000000>;
+    CPU0: cpu@0 {
+      device_type = "cpu";
+      reg = <0>;
+      status = "okay";
+      compatible = "riscv";
+      riscv,isa = "rv32ima";
+      mmu-type = "riscv,sv32";
+      clock-frequency = <50000000>;
+    };
+  };
+
+  soc {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    compatible = "simple-bus";
+    ranges;
+
+    intc: interrupt-controller@90000000 {
+        compatible = "xlnx,xps-intc-1.00.a";
+        reg = <0x90000000 0x1000>;
+        #interrupt-cells = <1>;
+        interrupt-controller;
+        xlnx,kind-of-intr = <0x2>;
+        xlnx,num-intr-inputs = <4>;
+    };
+
+    uart0: serial@92000000 {
+        compatible = "xlnx,xps-uartlite-1.00.a";
+        reg = <0x92000000 0x1000>;
+        interrupt-parent = <&intc>;
+        interrupts = <1>;
+        current-speed = <1000000>;
+    };
+  };
+
+  // 内核 RAM = 32MB。虚拟磁盘在 0x82000000(RAM 之外,像外设),mmap 读取。
+  memory@80000000 {
+      device_type = "memory";
+      reg = <0x80000000 0x2000000>;
+  };
+};
