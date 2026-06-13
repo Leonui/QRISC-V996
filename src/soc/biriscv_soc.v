@@ -14,6 +14,9 @@
 // 外部只暴露:DRAM 的 AXI4 主口 + UART 串行线 + spi/gpio 引脚。
 //-----------------------------------------------------------------
 module biriscv_soc
+#(
+     parameter UART_BIT_DIV = 32'd24   // clk cycles per UART bit; sim default 24, FPGA wrapper sets 434
+)
 (
      input           clk_i
     ,input           rst_i
@@ -146,7 +149,11 @@ u_core
 //-----------------------------------------------------------------
 // riscv_soc 的 soc:arb + tap + 全外设
 //-----------------------------------------------------------------
-soc u_soc
+soc
+#(
+    .UART_BIT_DIV(UART_BIT_DIV)
+)
+u_soc
 (
      .clk_i(clk_i)
     ,.rst_i(rst_i)

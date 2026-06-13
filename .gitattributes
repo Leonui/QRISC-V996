@@ -1,0 +1,7 @@
+# Prebuilt FPGA release binaries: committed as plain git blobs (each <100MB).
+# NOT git-lfs — QRSIC-HW is a GitHub fork, and forks cannot upload new LFS
+# objects to the parent's shared LFS storage. -text keeps git from trying to
+# line-normalize them. The existing image/*.elf are likewise plain blobs.
+fpga/hw/*.bit           -text
+fpga/boot/*.elf         -text
+fpga/riscv_images/*.bin -text

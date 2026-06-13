@@ -12,7 +12,7 @@
 
 module tb_soc;
 
-localparam BIT_DIV = 24;     // 必须与 uart_lite.v 的 BIT_DIV 一致
+localparam BIT_DIV = 24;     // 必须与 uart_lite.v 的 BIT_DIV 一致(sim 默认 24;FPGA wrapper 设 434)
 
 //----------------- 时钟 / 复位 -----------------
 reg clk = 1'b0;

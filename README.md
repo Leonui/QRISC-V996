@@ -29,6 +29,7 @@ QRISC-V996/
 ├── scripts/make_hex.py  ELF → $readmemh hex(零依赖)
 ├── gui/               Tkinter 串口控制台 + 后端
 ├── image/             预编译 OS 镜像(hvc0 / ttyul0,clone 即可跑)
+├── fpga/              ZCU104 上板文件(预编译 bit、JTAG 启动脚本和镜像,git-lfs)
 └── docs/              操作 / 从零重建指南(PDF)
 ```
 
@@ -56,6 +57,19 @@ python3 gui/biriscv_soc_console.py
 | `…-ttyul0.elf` | 内核 uartlite 驱动(ttyUL0) | **真中断驱动路径**(irq_ctrl + uartlite),慢但最真实 |
 
 GUI 里「模式 = Linux」时可在下拉选 hvc0 / ttyUL0。
+
+## 在 ZCU104 上跑(真实硬件)/ Run on real hardware (ZCU104)
+
+除了仿真,仓库里也放了一套可以直接上 ZCU104 的文件:同一个 biRISC-V SoC 会下载到 PL,
+以 50 MHz 运行,由 ARM PS 配合 JTAG 启动。你可以先跑裸机 hello,也可以启动 Linux。
+预编译的 `bit` 和启动文件通过 git-lfs 管理,按 **[fpga/README.md](fpga/README.md)**
+里的步骤执行 `xsct` 即可。
+
+The repo also includes the files needed to run on a ZCU104. They load the same
+biRISC-V SoC into the PL at 50 MHz, with the ARM PS handling the JTAG boot flow.
+The prebuilt `bit` and boot files are stored with git-lfs; follow
+**[fpga/README_EN.md](fpga/README_EN.md)** to bring up either the bare-metal
+hello image or the Linux image with `xsct`.
 
 ## SDK —— 给平台写程序(详见 [sdk/README.md](sdk/README.md))
 

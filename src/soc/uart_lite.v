@@ -49,6 +49,9 @@
 // Module:  UART (uartlite compatable)
 //-----------------------------------------------------------------
 module uart_lite
+#(
+     parameter BIT_DIV = 32'd24   // clk cycles per bit; sim default 24, FPGA overrides (50MHz/434=115200)
+)
 (
     // Inputs
      input          clk_i
@@ -300,7 +303,7 @@ wire ulite_tx_wr_req_w = ulite_tx_wr_q;
 
 // Configuration
 localparam   STOP_BITS = 1'b0; // 0 = 1, 1 = 2
-localparam   BIT_DIV   = 32'd24;
+// BIT_DIV is now a module parameter (see header): sim default 24, FPGA wrapper sets 434.
 
 localparam   START_BIT = 4'd0;
 localparam   STOP_BIT0 = 4'd9;

@@ -44,6 +44,9 @@
 //-----------------------------------------------------------------
 
 module soc
+#(
+     parameter UART_BIT_DIV = 32'd24   // clk cycles per UART bit; sim default 24, FPGA overrides
+)
 (
     // Inputs
      input           clk_i
@@ -347,7 +350,11 @@ irq_ctrl u_intc
 );
 
 
-uart_lite u_uart
+uart_lite
+#(
+    .BIT_DIV(UART_BIT_DIV)
+)
+u_uart
 (
     // Inputs
      .clk_i(clk_i)
